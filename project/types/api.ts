@@ -1,36 +1,31 @@
+// types/api.ts
+
 export interface User {
   id: string;
   email: string;
+  name: string;
   type: 'student' | 'teacher';
-  name?: string;
   selected_language: string;
   profile_image_url?: string;
-  settings: Record<string, any>;
   created_at: string;
   last_login?: string;
 }
 
 export interface Subject {
   id: string;
-  name: Record<string, string>;
+  name: string;
   translations: Record<string, string>;
-  icon_url?: string;
-}
-
-export interface Module {
-  id: string;
-  title: Record<string, string>;
-  subject_id: string;
+  icon_url: string;
 }
 
 export interface Lesson {
   id: string;
   title: Record<string, string>;
-  description?: Record<string, string>;
+  description: Record<string, string>;
   subject_id: string;
-  tags?: string[];
-  level?: 'basic' | 'intermediate' | 'advanced';
-  author_id?: string;
+  tags: string[];
+  level: string;
+  author_id: string;
   created_at: string;
   updated_at: string;
 }
@@ -42,10 +37,10 @@ export interface Material {
   language: string;
   url: string;
   format: string;
-  size?: number;
-  version: number;
+  size: number;
+  version: string;
   order: number;
-  checksum?: string;
+  checksum: string;
   created_at: string;
 }
 
@@ -53,18 +48,18 @@ export interface LessonProgress {
   id: string;
   user_id: string;
   lesson_id: string;
-  status: 'not_started' | 'in_progress' | 'completed';
+  status: string;
   progress_percent: number;
-  last_accessed?: string;
+  last_accessed: string;
   score?: number;
 }
 
-export interface TestQuestion {
+export interface Question {
   id: string;
   lesson_id: string;
   text: Record<string, string>;
-  type: 'multiple_choice' | 'true_false' | 'fill_gap';
-  options?: Record<string, string>[];
+  type: 'multiple_choice' | 'true_false' | 'short_answer';
+  options: string[];
   order: number;
 }
 
@@ -79,15 +74,15 @@ export interface Download {
   id: string;
   user_id: string;
   material_id: string;
-  version: number;
+  version: string;
   local_path: string;
   downloaded_at: string;
 }
 
-export interface Progress {
+export interface ProgressDay {
   id: string;
   user_id: string;
-  date: string; // YYYY-MM-DD
+  date: string;
   time_spent: number;
   lessons_completed: number;
   points_earned: number;
@@ -99,7 +94,7 @@ export interface Achievement {
   code: string;
   title: Record<string, string>;
   description: Record<string, string>;
-  icon_url?: string;
+  icon_url: string;
   points: number;
   created_at: string;
   updated_at: string;

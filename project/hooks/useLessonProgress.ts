@@ -1,34 +1,13 @@
-// File: project/hooks/useLessonProgress.ts
+import { useEffect, useState } from 'react';
+import { getLessonProgress } from '../services/progress';
 
-import { useState, useEffect } from 'react';
-import {
-  getLessonProgress,
-  LessonProgressRow
-} from '../src/database/lessonProgress';
-import { useContext } from 'react';
-import { UserContext } from '../context/UserContext';
-
-export function useLessonProgress() {
-  const { userId } = useContext(UserContext);
-  const [items, setItems] = useState<LessonProgressRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const load = async () => {
-    setLoading(true);
-    try {
-      const data = await getLessonProgress(userId);
-      setItems(data);
-    } catch (e: any) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+export const useLessonProgress = (userId: string, lessonId: string) => {
+  const [progress, setProgress] = useState<any>(null);
 
   useEffect(() => {
-    load();
-  }, [userId]);
+    if (!userId || !lessonId) return;
+    getLessonProgress(userId, lessonId).then(setProgress);
+  }, [userId, lessonId]);
 
-  return { items, loading, error, reload: load };
-}
+  return progress;
+};

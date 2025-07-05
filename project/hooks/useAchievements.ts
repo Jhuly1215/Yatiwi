@@ -1,33 +1,13 @@
-import { useState, useEffect } from 'react';
-import {
-  getAllAchievements,       // tu función CRUD desde src/database/achievements.ts
-  AchievementRow
-} from '../src/database/achievements';
+import { useEffect, useState } from 'react';
+import { getUserAchievements } from '../services/achievements';
 
-export function useAchievements() {
-  const [items, setItems] = useState<AchievementRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const load = async () => {
-    setLoading(true);
-    try {
-      const data = await getAllAchievements();
-      setItems(data);
-    } catch (e: any) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+export const useAchievements = (userId: string) => {
+  const [achievements, setAchievements] = useState<any[]>([]);
 
   useEffect(() => {
-    load();
-  }, []);
+    if (!userId) return;
+    getUserAchievements(userId).then(setAchievements);
+  }, [userId]);
 
-  const reload = () => {
-    load();
-  };
-
-  return { items, loading, error, reload };
-}
+  return achievements;
+};

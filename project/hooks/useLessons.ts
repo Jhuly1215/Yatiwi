@@ -1,46 +1,13 @@
-// File: project/hooks/useLessons.ts
+import { useEffect, useState } from 'react';
+import { getLessonsBySubject } from '../services/lessons';
 
-import { useState, useEffect } from 'react';
-import { getLessonsBySubject, LessonRow } from '../src/database/lessons';
-
-interface UseLocalLessonsResult {
-  items: LessonRow[];
-  loading: boolean;
-  error: Error | null;
-  reload: () => void;
-}
-
-/**
- * Hook para obtener lecciones de un módulo (o subject) offline.
- * @param subjectId ID del módulo/subject para filtrar lecciones
- */
-export function useLessons(subjectId: string): UseLocalLessonsResult {
-  const [items, setItems] = useState<LessonRow[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  const load = async () => {
-    setLoading(true);
-    try {
-      const data = await getLessonsBySubject(subjectId);
-      setItems(data);
-    } catch (e: any) {
-      setError(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+export const useLessons = (subjectId: string) => {
+  const [lessons, setLessons] = useState<any[]>([]);
 
   useEffect(() => {
-    if (subjectId) {
-      load();
-    }
+    if (!subjectId) return;
+    getLessonsBySubject(subjectId).then(setLessons);
   }, [subjectId]);
 
-  return {
-    items,
-    loading,
-    error,
-    reload: load,
-  };
-}
+  return lessons;
+};
